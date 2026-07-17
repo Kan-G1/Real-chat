@@ -1,8 +1,14 @@
 # Real-chat
 
-A real-time chat application built with React and [ChatEngine.io](https://chatengine.io),
-deployed on Vercel as a single project: a Vite/React front end plus one serverless
-function that handles authentication.
+> **⚠️ Archived — no live demo.** This app was built on ChatEngine.io, a third-party
+> service that has since shut down (its domain is now parked). ChatEngine provided both
+> the authentication API and the chat UI backend, so the app cannot run without it and
+> there is no live deployment. The code is kept here as a reference; reviving it would
+> mean porting the messaging layer to another realtime provider.
+
+A real-time chat application built with React and ChatEngine.io, structured as a single
+Vercel project: a Vite/React front end plus one serverless function that handles
+authentication.
 
 ## How it works
 
