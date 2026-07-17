@@ -1,11 +1,21 @@
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
-const bodyParser = require("body-parser");
 
 const app = express();
 app.use(cors({ origin: true }));
-app.use(bodyParser.json());  // Use body-parser to parse JSON bodies
+app.use(express.json());
+
+const PORT = process.env.PORT || 3001;
+const PRIVATE_KEY = process.env.CHAT_ENGINE_PRIVATE_KEY;
+
+if (!PRIVATE_KEY) {
+  console.warn("CHAT_ENGINE_PRIVATE_KEY is not set - /authenticate will fail.");
+}
+
+app.get("/health", (req, res) => {
+  res.json({ ok: true, keyConfigured: Boolean(PRIVATE_KEY) });
+});
 
 app.post("/authenticate", async (req, res) => {
   const { username } = req.body;
@@ -14,11 +24,15 @@ app.post("/authenticate", async (req, res) => {
     return res.status(400).json({ error: "Username is required" });
   }
 
+  if (!PRIVATE_KEY) {
+    return res.status(500).json({ error: "Server is missing CHAT_ENGINE_PRIVATE_KEY" });
+  }
+
   try {
     const r = await axios.put(
       'https://api.chatengine.io/users/',
       { username: username, secret: username, first_name: username, last_name: username },
-      { headers: { "private-key": "aed39ec9-c330-4a25-afa2-50658e373b79" } }
+      { headers: { "private-key": PRIVATE_KEY } }
     );
     return res.status(r.status).json(r.data);
   } catch (e) {
@@ -26,6 +40,6 @@ app.post("/authenticate", async (req, res) => {
   }
 });
 
-app.listen(3001, () => {
-  console.log("Server is running on port 3001");
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });

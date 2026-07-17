@@ -1,9 +1,12 @@
 import axios from 'axios'
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 const AuthPage = (props) => {
     const onSubmit = (e) => {
       e.preventDefault();
       const { value } = e.target[0];
-      axios.post('http://localhost:3001/authenticate',
+      axios.post(`${API_URL}/authenticate`,
                 {username: value}
       )
       .then(r => props.onAuth({...r.data, secret: value}))
